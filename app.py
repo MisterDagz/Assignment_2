@@ -22,13 +22,13 @@ def register():
 			return """success: Account Created"""
 			
 	if request.method == 'GET':
-		pass
+		return "Blank"
 	
 @app.route('/login')
 def login():
-	pass
+	return "Blank"
 @app.route('/spell_check')
 def spell_check():
-	pass
+	return "Blank"
 if __name__=="__main__":
 	app.run()
