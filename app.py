@@ -24,10 +24,10 @@ def register():
 		pass
 	
 @app.route('/login')
-	def login():
-		pass
+def login():
+	pass
 @app.route('/spell_check')
-	def spell_check():
-		pass
+def spell_check():
+	pass
 if __name__=="__main__":
 	app.run()
