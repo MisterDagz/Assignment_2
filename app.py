@@ -27,9 +27,26 @@ def register():
 	if request.method == 'GET':
 		return render_template('register.html', title="Register")
 	
-@app.route('/login')
+@app.route('/login', methods=['GET', 'POST'])
 def login():
-	return "Blank"
+	if request.method == 'POST':
+		# .get returns none if form value not there
+		uname = request.form.get("uname")
+		pword = request.form.get('pword')
+		twofa = request.form.get('2fa')
+		if uname not in users:
+			return render_template('register.html', title="Register", message="""Incorrect Username or Password""")
+		else:
+			if pword != users[uname]["password"]:
+				return render_template('register.html', title="Register", message="""Incorrect Username or Password""")
+			elif twofa != users[uname]["2fa"]:
+				return render_template('register.html', title="Register", message="""Two-factor Authentication Failure, wrong code supplied""")
+			else:
+				return render_template('register.html', title="Register", message="""Success""")
+			
+	if request.method == 'GET':
+		return render_template('login.html', title="Login")
+	
 @app.route('/spell_check')
 def spell_check():
 	return "Blank"
