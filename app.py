@@ -1,11 +1,14 @@
-from flask import Flask, request
+from flask import Flask, request, render_template
+
 
 app=Flask(__name__)
+app.config['SECRET_KEY'] = 'you-will-never-guess'
 
 users = {}
+
 @app.route('/')
 def home():
-	return "<h1> Hello World 2</h1>"
+	return render_template('base.html', title="Home")
 
 @app.route('/register', methods=['GET', 'POST'])
 def register():
@@ -15,14 +18,14 @@ def register():
 		pword = request.form.get('pword')
 		twofa = request.form.get('2fa')
 		if uname in users:
-			return """failure: User already Exists"""
+			return render_template('register.html', title="Register", message="""Failure: User already Exists""")
 		else:
 			jblob = {"username": uname, "password": pword, "2fa": twofa}
 			users[uname] = jblob
-			return """success: Account Created"""
+			return render_template('register.html', title="Register", message="""Success: Account Created""")
 			
 	if request.method == 'GET':
-		return "Blank"
+		return render_template('register.html', title="Register")
 	
 @app.route('/login')
 def login():
