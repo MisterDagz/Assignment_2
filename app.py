@@ -35,14 +35,14 @@ def login():
 		pword = request.form.get('pword')
 		twofa = request.form.get('2fa')
 		if uname not in users:
-			return render_template('register.html', title="Register", message="""Incorrect Username or Password""")
+			return render_template('login.html', title="Register", message="""Incorrect Username or Password""")
 		else:
 			if pword != users[uname]["password"]:
-				return render_template('register.html', title="Register", message="""Incorrect Username or Password""")
+				return render_template('login.html', title="Register", message="""Incorrect Username or Password""")
 			elif twofa != users[uname]["2fa"]:
-				return render_template('register.html', title="Register", message="""Two-factor Authentication Failure, wrong code supplied""")
+				return render_template('login.html', title="Register", message="""Two-factor Authentication Failure, wrong code supplied""")
 			else:
-				return render_template('register.html', title="Register", message="""Success""")
+				return render_template('login.html', title="Register", message="""Success""")
 			
 	if request.method == 'GET':
 		return render_template('login.html', title="Login")
