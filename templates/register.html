@@ -22,7 +22,7 @@
 
         <p><input id="submit" name="submit" type="submit" value="Register"></p>
         {% if message %}
-        <p>{{ message }}<br></p>
+        <p><input type="hidden" id="success" value="{{ message }}">{{ message }}<br></p>
 	{% else %}
 	{% endif %}
     </form>
