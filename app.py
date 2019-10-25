@@ -19,6 +19,7 @@ def register():
 		else:
 			jblob = {"username": uname, "password": pword, "2fa": twofa}
 			users[uname] = jblob
+			return """success: Account Created"""
 			
 	if request.method == 'GET':
 		pass
