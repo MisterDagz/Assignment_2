@@ -1,6 +1,7 @@
 from flask import Flask, request, render_template, make_response, redirect
 import random
 import string
+import subprocess
 
 app=Flask(__name__)
 app.config['SECRET_KEY'] = 'you-will-never-guess'
@@ -87,7 +88,7 @@ def login():
 	
 @app.route('/spell_check', methods=["GET", "POST"])
 def spell_check():	
-	"""
+	
 	authorized = False
 	if request.cookies.get('auth') is not None:
 		auth = request.cookies.get('auth')
@@ -104,14 +105,21 @@ def spell_check():
 			return redirect("/")
 	else:
 		return redirect("/")
-	"""
+	
 	authorized = True
 	if authorized:
 		if request.method == 'GET':
-			print("HERE", request.form.get("inputtext"), request.cookies.get('auth'), request.cookies.get('username'))
+			
 			return render_template('spell_check.html', title="Login")
 		if request.method == 'POST':
-			print("HERE", request.form.get("inputtext"), request.cookies.get('auth'), request.cookies.get('username'))		
+			
+			text = request.form.get('inputtext')
+			f = open("test.txt", "w")
+			f.write(text)
+			f.close()
+			MyOut = subprocess.Popen(['./a.out', 'test.txt', 'wordlist.txt'], stdout=subprocess.PIPE)
+			stdout,stderr = MyOut.communicate()
+			print(stdout)
 			return render_template('spell_check.html', title="Login")
 	
 if __name__=="__main__":
