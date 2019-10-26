@@ -86,7 +86,8 @@ def login():
 		return render_template('login.html', title="Login")
 	
 @app.route('/spell_check', methods=["GET", "POST"])
-def spell_check():
+def spell_check():	
+	"""
 	authorized = False
 	if request.cookies.get('auth') is not None:
 		auth = request.cookies.get('auth')
@@ -103,8 +104,8 @@ def spell_check():
 			return redirect("/")
 	else:
 		return redirect("/")
-
-	# authorized = True
+	"""
+	authorized = True
 	if authorized:
 		if request.method == 'GET':
 			return render_template('spell_check.html', title="Login")
