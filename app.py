@@ -88,6 +88,7 @@ def login():
 @app.route('/spell_check')
 def spell_check():
 	authorized = False
+	"""
 	if request.cookies.get('auth') is not None:
 		auth = request.cookies.get('auth')
 		if auth in cookies.keys():
@@ -99,6 +100,8 @@ def spell_check():
 			return redirect("/")
 	else:
 		return redirect("/")
+	"""
+	authorized = True
 	if authorized:
 		if request.method == 'GET':
 			return render_template('spell_check.html', title="Login")
