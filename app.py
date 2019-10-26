@@ -108,9 +108,10 @@ def spell_check():
 	authorized = True
 	if authorized:
 		if request.method == 'GET':
+			print("HERE", request.form.get("inputtext"), request.cookies.get('auth'), request.cookies.get('username'))
 			return render_template('spell_check.html', title="Login")
 		if request.method == 'POST':
-			print(request.form.get("inputtext"), request.cookies.get('auth'), request.cookies.get('username'))		
+			print("HERE", request.form.get("inputtext"), request.cookies.get('auth'), request.cookies.get('username'))		
 			return render_template('spell_check.html', title="Login")
 	
 if __name__=="__main__":
