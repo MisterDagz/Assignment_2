@@ -2,6 +2,7 @@ from flask import Flask, request, render_template, make_response, redirect, sess
 import random
 import string
 import subprocess
+import os
 app=Flask(__name__)
 app.config['SECRET_KEY'] = 'you-will-never-guess'
 
@@ -130,7 +131,8 @@ def spell_check():
 			f = open("test.txt", "w")
 			f.write(text)
 			f.close()
-			MyOut = subprocess.Popen(['/a.out', 'test.txt', 'wordlist.txt'], stdout=subprocess.PIPE)
+			exepath = os.path.expanduser('~/a.out')
+			MyOut = subprocess.Popen([exepath, 'test.txt', 'wordlist.txt'], stdout=subprocess.PIPE)
 			
 			stdout,stderr = MyOut.communicate()
 			miss = stdout.decode('utf-8')
