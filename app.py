@@ -96,6 +96,7 @@ def login():
 def spell_check():	
 	
 	authorized = False
+	
 	if 'auth' in session.keys():
 		if session['auth'] is not None:
 			auth = session['auth']
@@ -113,11 +114,10 @@ def spell_check():
 		else:
 			return redirect("/")
 	
-	authorized = True
 	if authorized:
 		if request.method == 'GET':
 			
-			return render_template('spell_check.html', title="Login")
+			return render_template('spell_check.html', title="Spell Check")
 		if request.method == 'POST':
 			
 			text = request.form.get('inputtext')
@@ -126,8 +126,11 @@ def spell_check():
 			f.close()
 			MyOut = subprocess.Popen(['./a.out', 'test.txt', 'wordlist.txt'], stdout=subprocess.PIPE)
 			stdout,stderr = MyOut.communicate()
-			print(stdout)
-			return render_template('spell_check.html', title="Login")
-	
+			miss = stdout.decode('utf-8')
+			
+			
+			return render_template('spell_check.html', title="Spell Check", textout=text, misspelled=miss.replace('\n',','))
+
+
 if __name__=="__main__":
 	app.run()

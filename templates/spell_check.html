@@ -9,9 +9,13 @@
 	    <input id="inputtext" name="inputtext" type="text" value=""><br>
         </p>
 
-        <p><input id="submit" name="submit" type="submit" value="Login"></p>
-        {% if message %}
-        <p><input type="hidden" id="result" value="{{ message }}">{{ message }}</p>
+        <p><input id="submit" name="submit" type="submit" value="Check"></p>
+        {% if misspelled %}
+        <p><input type="hidden" id="misspelled" value="{{ misspelled }}">Misspelled: {{ misspelled }}</p>
+	{% else %}
+	{% endif %}
+	{% if textout %}
+        <p><input type="hidden" id="textout" value="{{ textout }}">Initial Text:{{ textout }}</p>
 	{% else %}
 	{% endif %}
     </form>
