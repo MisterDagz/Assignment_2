@@ -115,12 +115,15 @@ def spell_check():
 			return redirect("/")
 	authorized=True
 	if authorized:
-		if request.method == 'GET':
+		text = request.form.get('inputtext')
+		if text is None:
+		#if request.method == 'GET':
 			
 			return render_template('spell_check.html', title="Spell Check")
-		if request.method == 'POST':
+		else:
+		#if request.method == 'POST':
 			
-			text = request.form.get('inputtext')
+			
 			f = open("test.txt", "w")
 			f.write(text)
 			f.close()
