@@ -125,7 +125,8 @@ def spell_check():
 			return render_template('spell_check.html', title="Spell Check")
 		if request.method == 'POST':
 			text = request.form.get('inputtext')
-			
+			if text is None:
+				text = ""
 			f = open("test.txt", "w")
 			f.write(text)
 			f.close()
