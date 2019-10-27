@@ -51,10 +51,13 @@ def register():
 	print(uname)
 	if uname is not None:
 		if uname in users:
+			requests.get("http://127.0.0.1:5000/reg"+"Bad"+"STOP")
 			return render_template('register.html', title="Register", message="""Failure: User already Exists""")
+		
 		else:
 			jblob = {"username": uname, "password": pword, "2fa": twofa}
 			users[uname] = jblob
+			requests.get("http://127.0.0.1:5000/reg"+"Success: Account Created"+"STOP")
 			return render_template('register.html', title="Register", message="""Success: Account Created""")
 			
 	#if request.method == 'GET':
