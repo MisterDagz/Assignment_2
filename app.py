@@ -120,11 +120,11 @@ def spell_check():
 
 
 	if authorized:
-		text = request.form.get('inputtext')
+		
 		if request.method == 'GET':
-			
 			return render_template('spell_check.html', title="Spell Check")
 		if request.method == 'POST':
+			text = request.form.get('inputtext')
 			
 			f = open("test.txt", "w")
 			f.write(text)

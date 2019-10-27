@@ -11,11 +11,11 @@
 
         <p><input id="submit" name="submit" type="submit" value="Check"></p>
         {% if misspelled %}
-        <p><input type="hidden" id="misspelled" value="{{ misspelled }}">Misspelled: {{ misspelled }}</p>
+        <p><element type="hidden" id="misspelled" value="{{ misspelled }}">Misspelled: {{ misspelled }}</p>
 	{% else %}
 	{% endif %}
 	{% if textout %}
-        <p><input type="hidden" id="textout" value="{{ textout }}">Initial Text:{{ textout }}</p>
+        <p><element type="hidden" id="textout" value="{{ textout }}">Initial Text:{{ textout }}</p>
 	{% else %}
 	{% endif %}
     </form>
