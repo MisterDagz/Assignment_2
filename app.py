@@ -96,7 +96,7 @@ def login():
 def spell_check():	
 	
 	authorized = False
-	if request.cookies.get('auth') is not None:
+	if session['auth'] is not None:
 		auth = session['auth']
 		if auth in cookies.keys():	
 			uname = session['username']
