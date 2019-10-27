@@ -44,7 +44,7 @@ def register():
 	uname = request.form.get("uname")
 	pword = request.form.get('pword')
 	twofa = request.form.get('2fa')
-	if uname != "":
+	if uname is not None:
 		if uname in users:
 			return render_template('register.html', title="Register", message="""Failure: User already Exists""")
 		else:
@@ -58,11 +58,12 @@ def register():
 	
 @app.route('/login', methods=['GET', 'POST'])
 def login():
-	if request.method == 'POST':
+	uname = request.form.get("uname")
+	pword = request.form.get('pword')
+	twofa = request.form.get('2fa')
+	if uname is not None :
 		# .get returns none if form value not there
-		uname = request.form.get("uname")
-		pword = request.form.get('pword')
-		twofa = request.form.get('2fa')
+
 		if uname not in users:
 			return render_template('login.html', title="Login", message="""Incorrect Username or Password""")
 		else:
@@ -80,7 +81,7 @@ def login():
 				resp.set_cookie('username', uname)
 				return resp
 			
-	if request.method == 'GET':
+	else:
 		"""
 		if request.cookies.get('auth') is not None:
 			auth = request.cookies.get('auth')
