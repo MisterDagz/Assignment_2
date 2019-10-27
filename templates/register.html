@@ -3,7 +3,8 @@
 {% block content %}
     <h1>Register</h1>
     <form action="" method="post" novalidate>
-        <p>
+	{{ form.hidden_tag() }}        
+	<p>
 	
             Username:<br>
             <input id="uname" name="uname" required size="32" type="text" value=""><br>

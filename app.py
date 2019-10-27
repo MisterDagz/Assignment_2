@@ -3,6 +3,9 @@ import random
 import string
 import subprocess
 import os
+from flask_wtf.csrf import CsrfProtect
+from forms import *
+
 app=Flask(__name__)
 app.config['SECRET_KEY'] = 'you-will-never-guess'
 
@@ -38,7 +41,7 @@ def home():
 
 @app.route('/register', methods=['GET', 'POST'])
 def register():
-	
+	form=LoginForm(request.form)
 	#if request.method == 'POST':
 		# .get returns none if form value not there
 	uname = request.form.get("uname")
@@ -47,36 +50,36 @@ def register():
 	
 	if uname is not None:
 		if uname in users:
-			return render_template('register.html', title="Register", message="""failure""")
+			return render_template('register.html', title="Register", message="""failure""", form=form)
 		
 		else:
 			jblob = {"username": uname, "password": pword, "2fa": twofa}
 			users[uname] = jblob
 			
-			return render_template('register.html', title="Register", message="""success""")
+			return render_template('register.html', title="Register", message="""success""", form=form)
 			
 	#if request.method == 'GET':
 	else:
-		return render_template('register.html', title="Register")
+		return render_template('register.html', title="Register", form=form)
 	
 @app.route('/login', methods=['GET', 'POST'])
 def login():
 	uname = request.form.get("uname")
 	pword = request.form.get('pword')
 	twofa = request.form.get('2fa')
-	
+	form=LoginForm(request.form)
 	if uname is not None :
 		# .get returns none if form value not there
 
 		if uname not in users:
-			return render_template('login.html', title="Login", message="""Incorrect Username or Password""")
+			return render_template('login.html', title="Login", message="""Incorrect Username or Password""", form=form)
 		else:
 			if pword != users[uname]["password"]:
-				return render_template('login.html', title="Login", message="""Incorrect Username or Password""")
+				return render_template('login.html', title="Login", message="""Incorrect Username or Password""", form=form)
 			elif twofa != users[uname]["2fa"]:
-				return render_template('login.html', title="Login", message="""Two-factor Authentication Failure, wrong code supplied""")
+				return render_template('login.html', title="Login", message="""Two-factor Authentication Failure, wrong code supplied""", form=form)
 			else:
-				resp = make_response(render_template('login.html', title="Register", message="""Success"""))
+				resp = make_response(render_template('login.html', title="Login", message="""Success""",form=form))
 				auth_token = randomString(20)
 				# Failure count is to check if someone is trying to enumerate the cookie for a user
 				cookies[auth_token] = {'username':uname, 'failurecount':0}
@@ -93,11 +96,11 @@ def login():
 				if checkcookie(auth, cookies[auth]['username']):
 					return redirect("/")
 		"""
-		return render_template('login.html', title="Login")
+		return render_template('login.html', title="Login", form=form)
 	
 @app.route('/spell_check', methods=["GET", "POST"])
 def spell_check():	
-	
+	form=SpellCheckForm(request.form)
 	authorized = False
 
 	if 'auth' in session.keys():
@@ -123,7 +126,7 @@ def spell_check():
 	if authorized:
 		
 		if request.method == 'GET':
-			return render_template('spell_check.html', title="Spell Check")
+			return render_template('spell_check.html', title="Spell Check", form=form)
 		if request.method == 'POST':
 			text = request.form.get('inputtext')
 			if text is None:
@@ -140,8 +143,13 @@ def spell_check():
 			if miss[len(miss)-1] ==",":
 				miss = miss[:len(miss)-1]
 			
-			return render_template('spell_check.html', title="Spell Check", textout=text, misspelled=miss)
+			return render_template('spell_check.html', title="Spell Check", textout=text, misspelled=miss, form=form)
 
 
 if __name__=="__main__":
-	app.run()
+	
+	csrf = CsrfProtect()
+	print("HERE")
+	csrf.init_app(app)
+
+	#app.run()
