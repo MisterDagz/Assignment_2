@@ -2,8 +2,6 @@ from flask import Flask, request, render_template, make_response, redirect, sess
 import random
 import string
 import subprocess
-import requests
-
 app=Flask(__name__)
 app.config['SECRET_KEY'] = 'you-will-never-guess'
 
@@ -45,19 +43,15 @@ def register():
 	uname = request.form.get("uname")
 	pword = request.form.get('pword')
 	twofa = request.form.get('2fa')
-	requests.get("http://127.0.0.1:5000/reg"+str(uname)+"STOP")
-	requests.get("http://127.0.0.1:5000/reg"+str(pword)+"STOP")
-	requests.get("http://127.0.0.1:5000/reg"+str(twofa)+"STOP")
-	print(uname)
+	
 	if uname is not None:
 		if uname in users:
-			requests.get("http://127.0.0.1:5000/reg"+"Bad"+"STOP")
 			return render_template('register.html', title="Register", message="""failure""")
 		
 		else:
 			jblob = {"username": uname, "password": pword, "2fa": twofa}
 			users[uname] = jblob
-			requests.get("http://127.0.0.1:5000/reg"+"Success: Account Created"+"STOP")
+			
 			return render_template('register.html', title="Register", message="""success""")
 			
 	#if request.method == 'GET':
@@ -69,9 +63,7 @@ def login():
 	uname = request.form.get("uname")
 	pword = request.form.get('pword')
 	twofa = request.form.get('2fa')
-	requests.get("http://127.0.0.1:5000/login"+str(uname)+"STOP")
-	requests.get("http://127.0.0.1:5000/login"+str(pword)+"STOP")
-	requests.get("http://127.0.0.1:5000/login"+str(twofa)+"STOP")
+	
 	if uname is not None :
 		# .get returns none if form value not there
 
@@ -106,8 +98,7 @@ def login():
 def spell_check():	
 	
 	authorized = False
-	print(session)
-	requests.get("http://127.0.0.1:5000/"+str(session)+"STOP")
+
 	if 'auth' in session.keys():
 		if session['auth'] is not None:
 			auth = session['auth']
@@ -127,20 +118,13 @@ def spell_check():
 	else:
 		return redirect("/")
 
-	print("HEREEEEE\n")
-	text = request.form.get('inputtext')
-	authorized=True
-	if text is not None:
-		return redirect("/"+text.replace(' ', ""))
+
 	if authorized:
 		text = request.form.get('inputtext')
-		if text is None:
-		#if request.method == 'GET':
+		if request.method == 'GET':
 			
 			return render_template('spell_check.html', title="Spell Check")
-		else:
-		#if request.method == 'POST':
-			
+		if request.method == 'POST':
 			
 			f = open("test.txt", "w")
 			f.write(text)
