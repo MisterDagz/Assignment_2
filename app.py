@@ -127,9 +127,11 @@ def spell_check():
 			MyOut = subprocess.Popen(['./a.out', 'test.txt', 'wordlist.txt'], stdout=subprocess.PIPE)
 			stdout,stderr = MyOut.communicate()
 			miss = stdout.decode('utf-8')
+			miss = miss.replace('\n',',')
+			if miss[len(miss)-1] ==",":
+				miss = miss[:len(miss)-1]
 			
-			
-			return render_template('spell_check.html', title="Spell Check", textout=text, misspelled=miss.replace('\n',','))
+			return render_template('spell_check.html', title="Spell Check", textout=text, misspelled=miss)
 
 
 if __name__=="__main__":
