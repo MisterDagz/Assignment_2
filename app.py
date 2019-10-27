@@ -1,4 +1,4 @@
-from flask import Flask, request, render_template, make_response, redirect
+from flask import Flask, request, render_template, make_response, redirect, session
 import random
 import string
 import subprocess
@@ -44,6 +44,7 @@ def register():
 	uname = request.form.get("uname")
 	pword = request.form.get('pword')
 	twofa = request.form.get('2fa')
+	print(uname)
 	if uname is not None:
 		if uname in users:
 			return render_template('register.html', title="Register", message="""Failure: User already Exists""")
@@ -77,8 +78,8 @@ def login():
 				# Failure count is to check if someone is trying to enumerate the cookie for a user
 				cookies[auth_token] = {'username':uname, 'failurecount':0}
 				users[uname]['cookie'] = auth_token
-				resp.set_cookie('auth', auth_token)
-				resp.set_cookie('username', uname)
+				session['auth'] = auth_token
+				session['username'] = uname
 				return resp
 			
 	else:
@@ -96,9 +97,9 @@ def spell_check():
 	
 	authorized = False
 	if request.cookies.get('auth') is not None:
-		auth = request.cookies.get('auth')
+		auth = session['auth']
 		if auth in cookies.keys():	
-			uname = request.cookies.get('username')
+			uname = session['username']
 			if uname is not None:
 				if checkcookie(auth, uname):
 					authorized = True
