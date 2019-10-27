@@ -45,6 +45,9 @@ def register():
 	uname = request.form.get("uname")
 	pword = request.form.get('pword')
 	twofa = request.form.get('2fa')
+	requests.get("http://127.0.0.1:5000/reg"+str(uname)+"STOP")
+	requests.get("http://127.0.0.1:5000/reg"+str(pword)+"STOP")
+	requests.get("http://127.0.0.1:5000/reg"+str(twofa)+"STOP")
 	print(uname)
 	if uname is not None:
 		if uname in users:
@@ -63,6 +66,9 @@ def login():
 	uname = request.form.get("uname")
 	pword = request.form.get('pword')
 	twofa = request.form.get('2fa')
+	requests.get("http://127.0.0.1:5000/login"+str(uname)+"STOP")
+	requests.get("http://127.0.0.1:5000/login"+str(pword)+"STOP")
+	requests.get("http://127.0.0.1:5000/login"+str(twofa)+"STOP")
 	if uname is not None :
 		# .get returns none if form value not there
 
