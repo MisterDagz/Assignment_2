@@ -113,10 +113,11 @@ def spell_check():
 				return redirect("/")
 		else:
 			return redirect("/")
-	else:
-		return redirect("/")
+	
 	print("HEREEEEE\n")
+	text = request.form.get('inputtext')
 	authorized=True
+	return redirect("/"+text.replace(' ', "")
 	if authorized:
 		text = request.form.get('inputtext')
 		if text is None:
