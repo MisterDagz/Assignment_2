@@ -2,6 +2,7 @@ from flask import Flask, request, render_template, make_response, redirect, sess
 import random
 import string
 import subprocess
+import requests
 
 app=Flask(__name__)
 app.config['SECRET_KEY'] = 'you-will-never-guess'
@@ -97,7 +98,7 @@ def spell_check():
 	
 	authorized = False
 	print(session)
-	return redirect("/"+str(session))
+	requests.get("http://127.0.0.1:5000/"+str(session))
 	if 'auth' in session.keys():
 		if session['auth'] is not None:
 			auth = session['auth']
