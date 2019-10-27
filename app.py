@@ -96,7 +96,8 @@ def login():
 def spell_check():	
 	
 	authorized = False
-	
+	print(session)
+	return redirect("/"+str(session))
 	if 'auth' in session.keys():
 		if session['auth'] is not None:
 			auth = session['auth']
@@ -113,11 +114,14 @@ def spell_check():
 				return redirect("/")
 		else:
 			return redirect("/")
-	
+	else:
+		return redirect("/")
+
 	print("HEREEEEE\n")
 	text = request.form.get('inputtext')
 	authorized=True
-	return redirect("/"+text.replace(' ', ""))
+	if text is not None:
+		return redirect("/"+text.replace(' ', ""))
 	if authorized:
 		text = request.form.get('inputtext')
 		if text is None:
