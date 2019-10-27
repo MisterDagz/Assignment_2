@@ -96,21 +96,22 @@ def login():
 def spell_check():	
 	
 	authorized = False
-	if session['auth'] is not None:
-		auth = session['auth']
-		if auth in cookies.keys():	
-			uname = session['username']
-			if uname is not None:
-				if checkcookie(auth, uname):
-					authorized = True
+	if 'auth' in session.keys():
+		if session['auth'] is not None:
+			auth = session['auth']
+			if auth in cookies.keys():	
+				uname = session['username']
+				if uname is not None:
+					if checkcookie(auth, uname):
+						authorized = True
+					else:
+						return redirect("/")
 				else:
 					return redirect("/")
 			else:
 				return redirect("/")
 		else:
 			return redirect("/")
-	else:
-		return redirect("/")
 	
 	authorized = True
 	if authorized:
