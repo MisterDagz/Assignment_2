@@ -113,6 +113,8 @@ def spell_check():
 				return redirect("/")
 		else:
 			return redirect("/")
+	else:
+		return redirect("/")
 	authorized=True
 	if authorized:
 		text = request.form.get('inputtext')
