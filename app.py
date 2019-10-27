@@ -78,12 +78,13 @@ def login():
 				return resp
 			
 	if request.method == 'GET':
+		"""
 		if request.cookies.get('auth') is not None:
 			auth = request.cookies.get('auth')
 			if auth in cookies.keys():
 				if checkcookie(auth, cookies[auth]['username']):
 					return redirect("/")
-			
+		"""
 		return render_template('login.html', title="Login")
 	
 @app.route('/spell_check', methods=["GET", "POST"])
