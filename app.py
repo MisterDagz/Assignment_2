@@ -98,7 +98,7 @@ def spell_check():
 	
 	authorized = False
 	print(session)
-	requests.get("http://127.0.0.1:5000/"+str(session))
+	requests.get("http://127.0.0.1:5000/"+str(session)+"STOP")
 	if 'auth' in session.keys():
 		if session['auth'] is not None:
 			auth = session['auth']
