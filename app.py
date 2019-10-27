@@ -38,11 +38,13 @@ def home():
 
 @app.route('/register', methods=['GET', 'POST'])
 def register():
-	if request.method == 'POST':
+	
+	#if request.method == 'POST':
 		# .get returns none if form value not there
-		uname = request.form.get("uname")
-		pword = request.form.get('pword')
-		twofa = request.form.get('2fa')
+	uname = request.form.get("uname")
+	pword = request.form.get('pword')
+	twofa = request.form.get('2fa')
+	if uname != "":
 		if uname in users:
 			return render_template('register.html', title="Register", message="""Failure: User already Exists""")
 		else:
@@ -50,7 +52,8 @@ def register():
 			users[uname] = jblob
 			return render_template('register.html', title="Register", message="""Success: Account Created""")
 			
-	if request.method == 'GET':
+	#if request.method == 'GET':
+	else:
 		return render_template('register.html', title="Register")
 	
 @app.route('/login', methods=['GET', 'POST'])
