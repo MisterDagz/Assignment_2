@@ -11,6 +11,7 @@ app.config['SECRET_KEY'] = 'you-will-never-guess'
 
 users = {}
 cookies = {}
+
 def randomString(stringLength=20):
 	letters = string.ascii_lowercase
 	letters += "0123456789"
@@ -37,7 +38,13 @@ def checkcookie(auth, userid):
 
 @app.route('/')
 def home():
-	return render_template('base.html', title="Home")
+	user=None
+	#Prevents cookie enumeration
+	if 'username' in session.keys():
+		if 'auth' in session.keys():
+			if checkcookie(session['auth'], session['username']):
+				user = session['username']
+	return render_template('base.html', title="Home", user=user)
 
 @app.route('/register', methods=['GET', 'POST'])
 def register():
@@ -47,20 +54,24 @@ def register():
 	uname = request.form.get("uname")
 	pword = request.form.get('pword')
 	twofa = request.form.get('2fa')
-	
+	user=None
+	if 'username' in session.keys():
+		if 'auth' in session.keys():
+			if checkcookie(session['auth'], session['username']):
+				user = session['username']
 	if uname is not None:
 		if uname in users:
-			return render_template('register.html', title="Register", message="""failure""", form=form)
+			return render_template('register.html', title="Register", message="""failure""", form=form, user=user)
 		
 		else:
 			jblob = {"username": uname, "password": pword, "2fa": twofa}
 			users[uname] = jblob
 			
-			return render_template('register.html', title="Register", message="""success""", form=form)
+			return render_template('register.html', title="Register", message="""success""", form=form, user=user)
 			
 	#if request.method == 'GET':
 	else:
-		return render_template('register.html', title="Register", form=form)
+		return render_template('register.html', title="Register", form=form,  user=user)
 	
 @app.route('/login', methods=['GET', 'POST'])
 def login():
@@ -68,18 +79,23 @@ def login():
 	pword = request.form.get('pword')
 	twofa = request.form.get('2fa')
 	form=LoginForm(request.form)
-	if uname is not None :
+	user=None
+	if 'username' in session.keys():
+		if 'auth' in session.keys():
+			if checkcookie(session['auth'], session['username']):
+				user = session['username']
+	if request.method =='POST' :
 		# .get returns none if form value not there
 
 		if uname not in users:
-			return render_template('login.html', title="Login", message="""Incorrect Username or Password""", form=form)
+			return render_template('login.html', title="Login", message="""Incorrect Username or Password""", form=form, user=user)
 		else:
 			if pword != users[uname]["password"]:
-				return render_template('login.html', title="Login", message="""Incorrect Username or Password""", form=form)
+				return render_template('login.html', title="Login", message="""Incorrect Username or Password""", form=form, user=user)
 			elif twofa != users[uname]["2fa"]:
-				return render_template('login.html', title="Login", message="""Two-factor Authentication Failure, wrong code supplied""", form=form)
+				return render_template('login.html', title="Login", message="""Two-factor Authentication Failure, wrong code supplied""", form=form, user=user)
 			else:
-				resp = make_response(render_template('login.html', title="Login", message="""Success""",form=form))
+				resp = make_response(render_template('login.html', title="Login", message="""Success""",form=form, user=uname))
 				auth_token = randomString(20)
 				# Failure count is to check if someone is trying to enumerate the cookie for a user
 				cookies[auth_token] = {'username':uname, 'failurecount':0}
@@ -88,7 +104,7 @@ def login():
 				session['username'] = uname
 				return resp
 			
-	else:
+	elif request.method=='GET':
 		"""
 		if request.cookies.get('auth') is not None:
 			auth = request.cookies.get('auth')
@@ -96,13 +112,13 @@ def login():
 				if checkcookie(auth, cookies[auth]['username']):
 					return redirect("/")
 		"""
-		return render_template('login.html', title="Login", form=form)
+		return render_template('login.html', title="Login", form=form, user=user)
 	
 @app.route('/spell_check', methods=["GET", "POST"])
 def spell_check():	
 	form=SpellCheckForm(request.form)
 	authorized = False
-
+	user = None
 	if 'auth' in session.keys():
 		if session['auth'] is not None:
 			auth = session['auth']
@@ -111,6 +127,7 @@ def spell_check():
 				if uname is not None:
 					if checkcookie(auth, uname):
 						authorized = True
+						user = session['username']
 					else:
 						return redirect("/")
 				else:
@@ -126,7 +143,7 @@ def spell_check():
 	if authorized:
 		
 		if request.method == 'GET':
-			return render_template('spell_check.html', title="Spell Check", form=form)
+			return render_template('spell_check.html', title="Spell Check", form=form, user=user)
 		if request.method == 'POST':
 			text = request.form.get('inputtext')
 			if text is None:
@@ -140,16 +157,16 @@ def spell_check():
 			stdout,stderr = MyOut.communicate()
 			miss = stdout.decode('utf-8')
 			miss = miss.replace('\n',',')
-			if miss[len(miss)-1] ==",":
-				miss = miss[:len(miss)-1]
+			if len(miss) >0:
+				if miss[len(miss)-1] ==",":
+					miss = miss[:len(miss)-1]
 			
-			return render_template('spell_check.html', title="Spell Check", textout=text, misspelled=miss, form=form)
+			return render_template('spell_check.html', title="Spell Check", textout=text, misspelled=miss, form=form, user=user)
 
 
 if __name__=="__main__":
 	
 	csrf = CsrfProtect()
-	print("HERE")
 	csrf.init_app(app)
 
 	#app.run()
