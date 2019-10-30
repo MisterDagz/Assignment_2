@@ -134,8 +134,8 @@ def spell_check():
 			f = open("test.txt", "w")
 			f.write(text)
 			f.close()
-			exepath = os.path.expanduser('~/a.out')
-			MyOut = subprocess.Popen([exepath, 'test.txt', 'wordlist.txt'], stdout=subprocess.PIPE)
+			//exepath = os.path.expanduser('~/a.out')
+			MyOut = subprocess.Popen(["a.out", 'test.txt', 'wordlist.txt'], stdout=subprocess.PIPE)
 			
 			stdout,stderr = MyOut.communicate()
 			miss = stdout.decode('utf-8')
