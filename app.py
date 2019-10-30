@@ -5,9 +5,12 @@ import subprocess
 import os
 from flask_wtf.csrf import CsrfProtect
 from forms import *
+from hashlib import sha256
 
+mkdir_init_call = subprocess.Popen(["mkdir", "userdata/"]) 
+mkdir_init_call.communicate()
 app=Flask(__name__)
-app.config['SECRET_KEY'] = 'you-will-never-guess'
+
 
 users = {}
 cookies = {}
@@ -17,6 +20,9 @@ def randomString(stringLength=20):
 	letters += "0123456789"
 
 	return ''.join(random.choice(letters) for i in range(stringLength))
+
+
+app.config['SECRET_KEY'] = randomString(40)
 
 def checkcookie(auth, userid):
 	#enforces an allowed number of failures for cookie auth, if it exceeds 3, the current cookie for the user is invalid.
@@ -148,11 +154,20 @@ def spell_check():
 			text = request.form.get('inputtext')
 			if text is None:
 				text = ""
-			f = open("test.txt", "w")
+			#Prevent Resource DOS (max file length is 10,000,000 bytes (10 MB)
+			if len(text) > 10000000:
+				text = text[:9999999]
+			#exepath = os.path.expanduser('~/a.out')
+			#Prevents command injection, and DOS for users
+			user_hash = sha256()
+			user_hash.update(user.encode('utf-8', "ignore"))
+			hash_val = user_hash.hexdigest()
+			mkdir_call = subprocess.Popen(["mkdir", "userdata/" + hash_val], stdout=subprocess.PIPE)
+			mkdir_call.communicate()
+			f = open("userdata/" + hash_val + "/test.txt", "w")
 			f.write(text)
 			f.close()
-			//exepath = os.path.expanduser('~/a.out')
-			MyOut = subprocess.Popen(["a.out", 'test.txt', 'wordlist.txt'], stdout=subprocess.PIPE)
+			MyOut = subprocess.Popen(["./a.out", "userdata/" + hash_val +'/test.txt', 'wordlist.txt'], stdout=subprocess.PIPE)
 			
 			stdout,stderr = MyOut.communicate()
 			miss = stdout.decode('utf-8')
