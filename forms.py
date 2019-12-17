@@ -12,6 +12,6 @@ class LoginForm(FlaskForm):
     twofa = TextField('2fa', [validators.Required()])
 
 class SpellCheckForm(FlaskForm):
-	password = TextField('inputtext', [
+	inputtext = TextField('inputtext', [
         validators.Required()
     ])
